@@ -77,22 +77,7 @@ import type { Product } from '../types/product'
 import ProductCard from './ProductCard.vue'
 import ProductModal from './ProductModal.vue'
 import WhatsAppButton from './WhatsAppButton.vue'
-import { computed } from 'vue'
-const toggleProducts = async () => {
-  loadingMore.value = true
 
-  await new Promise(resolve => setTimeout(resolve, 700)) // fake loading
-
-  showAll.value = !showAll.value
-  loadingMore.value = false
-}
-
-const showAll = ref(false)
-const loadingMore = ref(false)
-
-// const visibleProducts = computed(() => {
-//   return showAll.value ? products : products
-// })
 const { t } = useI18n()
 
 const isModalOpen = ref(false)

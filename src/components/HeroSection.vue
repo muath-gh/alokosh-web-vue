@@ -96,33 +96,52 @@
           </div>
         </div>
 
-        <div class="relative hidden lg:block">
-          <div class="relative w-full aspect-square animate-scale-in" style="animation-delay: 0.2s;">
+        <div class="relative hidden lg:block h-[700px]">
+          <div class="relative w-full h-full perspective-1000">
             <div class="absolute inset-0 bg-gradient-gold rounded-full opacity-20 blur-3xl animate-pulse-glow"></div>
 
-            <div class="relative w-full h-full">
-              <div class="absolute top-0 right-0 w-64 h-64 rounded-3xl overflow-hidden shadow-gold-lg transform rotate-6 hover:rotate-12 transition-transform duration-500 animate-float">
+            <div ref="imagesContainer" class="relative w-full h-full">
+              <div
+                ref="image1"
+                class="absolute top-0 right-0 w-[380px] h-[380px] rounded-[32px] overflow-hidden shadow-2xl border-4 border-white/50 backdrop-blur-sm"
+                style="transform-style: preserve-3d;"
+              >
+                <div class="absolute inset-0 bg-gradient-to-br from-gold-400/20 to-orange-400/20 z-10"></div>
                 <img
-                  src="/public/alokosh1.png"
+                  src="/alokosh1.png"
                   alt="طحينة"
-                  class="w-full h-full object-cover"
+                  class="w-full h-full object-contain p-4 bg-gradient-to-br from-amber-50 to-orange-50"
                 />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent z-20"></div>
               </div>
 
-              <div class="absolute bottom-20 left-0 w-64 h-64 rounded-3xl overflow-hidden shadow-gold-lg transform -rotate-6 hover:-rotate-12 transition-transform duration-500 animate-float" style="animation-delay: 0.5s;">
+              <div
+                ref="image2"
+                class="absolute bottom-0 left-0 w-[380px] h-[380px] rounded-[32px] overflow-hidden shadow-2xl border-4 border-white/50 backdrop-blur-sm"
+                style="transform-style: preserve-3d;"
+              >
+                <div class="absolute inset-0 bg-gradient-to-br from-gold-400/20 to-orange-400/20 z-10"></div>
                 <img
-                  src="/public/alokosh2.png"
+                  src="/alokosh2.png"
                   alt="سمسم"
-                  class="w-full h-full object-cover"
+                  class="w-full h-full object-contain p-4 bg-gradient-to-br from-amber-50 to-orange-50"
                 />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent z-20"></div>
               </div>
 
-              <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-3xl overflow-hidden shadow-gold-lg hover:scale-105 transition-transform duration-500 animate-float" style="animation-delay: 1s;">
+              <div
+                ref="image3"
+                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] rounded-[36px] overflow-hidden shadow-2xl border-4 border-white/50 backdrop-blur-sm z-10"
+                style="transform-style: preserve-3d;"
+              >
+                <div class="absolute inset-0 bg-gradient-to-br from-gold-400/30 to-orange-400/30 z-10"></div>
                 <img
-                  src="/public/alokosh3.png"
+                  src="/alokosh3.png"
                   alt="منتجات طبيعية"
-                  class="w-full h-full object-cover"
+                  class="w-full h-full object-contain p-4 bg-gradient-to-br from-amber-50 to-orange-50"
                 />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent z-20"></div>
+                <div class="absolute -inset-1 bg-gradient-gold rounded-[36px] opacity-50 blur-xl -z-10"></div>
               </div>
             </div>
           </div>
@@ -139,10 +158,17 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import gsap from 'gsap'
 import WhatsAppButton from './WhatsAppButton.vue'
 
 const { t } = useI18n()
+
+const image1 = ref<HTMLElement>()
+const image2 = ref<HTMLElement>()
+const image3 = ref<HTMLElement>()
+const imagesContainer = ref<HTMLElement>()
 
 const scrollToProducts = () => {
   const productsSection = document.getElementById('products')
@@ -150,4 +176,115 @@ const scrollToProducts = () => {
     productsSection.scrollIntoView({ behavior: 'smooth' })
   }
 }
+
+onMounted(() => {
+  if (!image1.value || !image2.value || !image3.value) return
+
+  const tl = gsap.timeline()
+
+  tl.from(image1.value!, {
+    duration: 1.2,
+    opacity: 0,
+    scale: 0.5,
+    rotateY: -90,
+    rotateZ: 12,
+    x: 100,
+    y: -100,
+    ease: 'back.out(1.7)',
+  })
+  .from(image2.value!, {
+    duration: 1.2,
+    opacity: 0,
+    scale: 0.5,
+    rotateY: 90,
+    rotateZ: -12,
+    x: -100,
+    y: 100,
+    ease: 'back.out(1.7)',
+  }, '-=0.8')
+  .from(image3.value!, {
+    duration: 1.4,
+    opacity: 0,
+    scale: 0.3,
+    rotateZ: 180,
+    ease: 'elastic.out(1, 0.5)',
+  }, '-=0.6')
+
+  gsap.to(image1.value!, {
+    y: '-=20',
+    rotateZ: 3,
+    duration: 3,
+    ease: 'sine.inOut',
+    repeat: -1,
+    yoyo: true,
+  })
+
+  gsap.to(image2.value!, {
+    y: '+=25',
+    rotateZ: -3,
+    duration: 3.5,
+    ease: 'sine.inOut',
+    repeat: -1,
+    yoyo: true,
+    delay: 0.5,
+  })
+
+  gsap.to(image3.value!, {
+    y: '-=15',
+    scale: 1.05,
+    duration: 4,
+    ease: 'sine.inOut',
+    repeat: -1,
+    yoyo: true,
+    delay: 1,
+  })
+
+  if (imagesContainer.value) {
+    const img1 = image1.value!
+    const img2 = image2.value!
+    const img3 = image3.value!
+
+    imagesContainer.value.addEventListener('mousemove', (e) => {
+      const rect = imagesContainer.value!.getBoundingClientRect()
+      const x = (e.clientX - rect.left - rect.width / 2) / rect.width
+      const y = (e.clientY - rect.top - rect.height / 2) / rect.height
+
+      gsap.to(img1, {
+        rotateY: x * 15,
+        rotateX: -y * 15,
+        duration: 0.5,
+        ease: 'power2.out',
+      })
+
+      gsap.to(img2, {
+        rotateY: x * 12,
+        rotateX: -y * 12,
+        duration: 0.5,
+        ease: 'power2.out',
+      })
+
+      gsap.to(img3, {
+        rotateY: x * 10,
+        rotateX: -y * 10,
+        duration: 0.5,
+        ease: 'power2.out',
+      })
+    })
+
+    imagesContainer.value.addEventListener('mouseleave', () => {
+      gsap.to([img1, img2, img3], {
+        rotateY: 0,
+        rotateX: 0,
+        duration: 0.8,
+        ease: 'power2.out',
+      })
+    })
+  }
+})
 </script>
+
+<style scoped>
+.perspective-1000 {
+  perspective: 1000px;
+}
+</style>
