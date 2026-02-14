@@ -195,7 +195,6 @@ onMounted(() => {
   .from(image2.value!, {
     duration: 1.2,
     opacity: 0,
-    scale: 0.5,
     rotateY: 90,
     rotateZ: -12,
     x: -100,
