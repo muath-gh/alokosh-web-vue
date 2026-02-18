@@ -131,7 +131,7 @@
 
               <div
                 ref="image3"
-                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] rounded-[36px] overflow-hidden shadow-2xl border-4 border-white/50 backdrop-blur-sm z-10"
+                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] h-[340px] rounded-[36px] overflow-hidden shadow-2xl border-4 border-white/50 backdrop-blur-sm z-10"
                 style="transform-style: preserve-3d;"
               >
                 <div class="absolute inset-0 bg-gradient-to-br from-gold-400/30 to-orange-400/30 z-10"></div>
@@ -228,15 +228,14 @@ onMounted(() => {
     delay: 0.5,
   })
 
-  gsap.to(image3.value!, {
-    y: '-=15',
-    scale: 1.05,
-    duration: 4,
-    ease: 'sine.inOut',
-    repeat: -1,
-    yoyo: true,
-    delay: 1,
-  })
+gsap.to(image3.value!, {
+  y: '-=15',
+  duration: 4,
+  ease: 'sine.inOut',
+  repeat: -1,
+  yoyo: true,
+  delay: 1,
+})
 
   if (imagesContainer.value) {
     const img1 = image1.value!
