@@ -11,7 +11,7 @@
         <div class="text-center lg:text-right space-y-8 animate-fade-in-up">
           <div class="inline-block">
             <img
-              src="/logo.png"
+              src="/public/logo.png"
               alt="العكش"
               class="h-40 md:h-56 lg:h-64 w-auto mx-auto lg:mx-0 drop-shadow-2xl animate-scale-in"
             />

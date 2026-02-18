@@ -8,7 +8,7 @@
       <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
         <div class="space-y-4">
           <img
-            src="/logo.png"
+            src="/public/logo.png"
             alt="العكش"
             class="h-24 w-auto"
           />
