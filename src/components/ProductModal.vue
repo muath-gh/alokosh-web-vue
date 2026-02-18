@@ -9,21 +9,21 @@
         <Transition name="scale">
           <div
             v-if="isOpen"
-            class="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-gradient-cream rounded-3xl shadow-gold-lg"
+            class="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-gradient-cream rounded-2xl md:rounded-3xl shadow-gold-lg"
           >
             <button
               @click="closeModal"
-              class="absolute top-4 left-4 z-10 w-12 h-12 flex items-center justify-center rounded-full glass-effect text-brown-900 hover:bg-gold-500 hover:text-white transition-all duration-300 hover:rotate-90"
+              class="absolute top-3 left-3 md:top-4 md:left-4 z-10 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full glass-effect text-brown-900 hover:bg-gold-500 hover:text-white transition-all duration-300 hover:rotate-90"
             >
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
 
-            <div class="grid md:grid-cols-2 gap-8 p-8">
+            <div class="grid md:grid-cols-2 gap-6 md:gap-8 p-4 md:p-8">
               <div class="relative">
                 <div class="sticky top-0">
-                  <div class="relative aspect-square rounded-2xl overflow-hidden shadow-gold">
+                  <div class="relative aspect-square rounded-xl md:rounded-2xl overflow-hidden shadow-gold">
                     <img
                       :src="product.image"
                       :alt="product.nameAr"
@@ -32,18 +32,19 @@
                     <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                   </div>
 
-                  <div class="mt-6 flex justify-center">
+                  <div class="mt-4 md:mt-6 flex justify-center">
                     <WhatsAppButton
-                      :message="`مرحباً، أريد طلب ${product.nameAr}`"
+                      :message="whatsappMessage"
                       :text="t('modal.orderNow')"
+                      :disabled="!canOrder"
                     />
                   </div>
                 </div>
               </div>
 
-              <div class="space-y-6">
+              <div class="space-y-4 md:space-y-6">
                 <div>
-                  <h2 class="text-4xl font-bold text-gradient mb-2">
+                  <h2 class="text-2xl md:text-4xl font-bold text-gradient mb-2">
                     {{ product.nameAr }}
                   </h2>
                   <div class="inline-block px-4 py-2 rounded-full bg-gold-100 text-gold-700 text-sm font-semibold">
@@ -51,15 +52,22 @@
                   </div>
                 </div>
 
-                <div class="space-y-4">
-                  <h3 class="text-xl font-bold text-brown-900">{{ t('modal.description') }}</h3>
-                  <p class="text-brown-700 text-lg leading-relaxed">
+                <div class="space-y-3 md:space-y-4">
+                  <h3 class="text-lg md:text-xl font-bold text-brown-900">{{ t('modal.description') }}</h3>
+                  <p class="text-brown-700 text-base md:text-lg leading-relaxed">
                     {{ product.descriptionAr }}
                   </p>
                 </div>
 
-                <div class="space-y-4">
-                  <h3 class="text-xl font-bold text-brown-900">{{ t('modal.features') }}</h3>
+                <div v-if="product.multi && product.options" class="space-y-3 md:space-y-4">
+                  <ProductOptions
+                    v-model="selectedOption"
+                    :options="product.options"
+                  />
+                </div>
+
+                <div class="space-y-3 md:space-y-4">
+                  <h3 class="text-lg md:text-xl font-bold text-brown-900">{{ t('modal.features') }}</h3>
                   <ul class="space-y-3">
                     <li
                       v-for="(feature, index) in product.featuresAr"
@@ -71,20 +79,21 @@
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                         </svg>
                       </span>
-                      <span class="text-lg">{{ feature }}</span>
+                      <span class="text-base md:text-lg">{{ feature }}</span>
                     </li>
                   </ul>
                 </div>
 
-                <div class="pt-6 border-t-2 border-gold-200">
-                  <h3 class="text-xl font-bold text-brown-900 mb-3">{{ t('modal.howToOrder') }}</h3>
-                  <p class="text-brown-700 text-lg mb-6">
+                <div class="pt-4 md:pt-6 border-t-2 border-gold-200">
+                  <h3 class="text-lg md:text-xl font-bold text-brown-900 mb-2 md:mb-3">{{ t('modal.howToOrder') }}</h3>
+                  <p class="text-brown-700 text-base md:text-lg mb-4 md:mb-6">
                     {{ t('modal.orderInstructions') }}
                   </p>
                   <WhatsAppButton
-                    :message="`مرحباً، أريد طلب ${product.nameAr}`"
+                    :message="whatsappMessage"
                     :text="t('modal.orderNow')"
                     variant="glass"
+                    :disabled="!canOrder"
                   />
                 </div>
               </div>
@@ -97,10 +106,11 @@
 </template>
 
 <script setup lang="ts">
-import { watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import type { Product } from '../types/product'
+import type { Product, ProductOption } from '../types/product'
 import WhatsAppButton from './WhatsAppButton.vue'
+import ProductOptions from './ProductOptions.vue'
 
 interface Props {
   isOpen: boolean
@@ -113,14 +123,31 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
+const selectedOption = ref<ProductOption | null>(null)
 
 const closeModal = () => {
   emit('close')
+  selectedOption.value = null
 }
+
+const whatsappMessage = computed(() => {
+  if (props.product.multi && selectedOption.value) {
+    return `مرحباً، أريد طلب ${props.product.nameAr} - ${selectedOption.value.nameAr}`
+  }
+  return `مرحباً، أريد طلب ${props.product.nameAr}`
+})
+
+const canOrder = computed(() => {
+  if (props.product.multi) {
+    return selectedOption.value !== null
+  }
+  return true
+})
 
 watch(() => props.isOpen, (newValue) => {
   if (newValue) {
     document.body.style.overflow = 'hidden'
+    selectedOption.value = null
   } else {
     document.body.style.overflow = ''
   }

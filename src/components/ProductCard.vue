@@ -13,8 +13,19 @@
       />
       <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
 
-      <div class="absolute top-4 right-4 px-4 py-2 rounded-full glass-effect text-brown-900 text-sm font-bold">
-        {{ getCategoryName(product.category) }}
+      <div class="absolute top-3 md:top-4 right-3 md:right-4 flex flex-col md:flex-row gap-2">
+        <div class="px-3 md:px-4 py-1.5 md:py-2 rounded-full glass-effect text-brown-900 text-xs md:text-sm font-bold">
+          {{ getCategoryName(product.category) }}
+        </div>
+        <div
+          v-if="product.multi"
+          class="px-2.5 md:px-3 py-1.5 md:py-2 rounded-full bg-gradient-gold text-white text-xs font-bold flex items-center justify-center gap-1"
+        >
+          <svg class="w-3 h-3 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+          </svg>
+          <span class="hidden sm:inline">خيارات</span>
+        </div>
       </div>
 
       <div class="absolute bottom-0 left-0 right-0 p-6 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">

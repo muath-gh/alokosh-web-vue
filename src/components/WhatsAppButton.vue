@@ -1,16 +1,21 @@
 <template>
-  <a
-    :href="whatsappLink"
-    target="_blank"
-    rel="noopener noreferrer"
-    class="whatsapp-button group relative inline-flex items-center gap-3 px-8 py-4 rounded-full font-bold text-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl"
-    :class="variant === 'primary' ? 'bg-gradient-gold text-white' : 'glass-effect text-brown-900'"
+  <component
+    :is="disabled ? 'button' : 'a'"
+    :href="disabled ? undefined : whatsappLink"
+    :target="disabled ? undefined : '_blank'"
+    :rel="disabled ? undefined : 'noopener noreferrer'"
+    :disabled="disabled"
+    class="whatsapp-button group relative inline-flex items-center gap-2 md:gap-3 px-6 md:px-8 py-3 md:py-4 rounded-full font-bold text-base md:text-lg overflow-hidden transition-all duration-300"
+    :class="[
+      variant === 'primary' ? 'bg-gradient-gold text-white' : 'glass-effect text-brown-900',
+      disabled ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105 hover:shadow-2xl'
+    ]"
   >
     <span class="absolute inset-0 bg-gradient-to-r from-gold-400 via-orange-500 to-gold-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
 
-    <span class="relative z-10 flex items-center gap-3">
+    <span class="relative z-10 flex items-center gap-2 md:gap-3">
       <svg
-        class="w-6 h-6 animate-pulse group-hover:animate-bounce"
+        class="w-5 h-5 md:w-6 md:h-6 animate-pulse group-hover:animate-bounce"
         fill="currentColor"
         viewBox="0 0 24 24"
       >
@@ -22,7 +27,7 @@
     <span class="absolute top-0 left-0 w-full h-full">
       <span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0 h-0 rounded-full bg-white/30 group-hover:w-96 group-hover:h-96 transition-all duration-700 ease-out"></span>
     </span>
-  </a>
+  </component>
 </template>
 
 <script setup lang="ts">
@@ -33,13 +38,15 @@ interface Props {
   message?: string
   text?: string
   variant?: 'primary' | 'glass'
+  disabled?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   phoneNumber: '966500000000',
   message: 'مرحباً، أريد الاستفسار عن منتجاتكم',
   text: 'تواصل عبر واتساب',
-  variant: 'primary'
+  variant: 'primary',
+  disabled: false
 })
 
 const whatsappLink = computed(() => {
